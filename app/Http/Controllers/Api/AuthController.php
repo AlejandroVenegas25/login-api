@@ -12,7 +12,7 @@ class AuthController extends Controller
     // Registro de usuario
     public function register(Request $request)
     {
-        \Log::info('Datos recibidos:', $request->all());  
+        \Log::info('Datos recibidos:', $request->all());
         $request->headers->set('Accept', 'application/json');
 
         $request->validate([
@@ -28,7 +28,8 @@ class AuthController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Usuario registrado correctamente',
+            'acceso' => 'Ok',
+            'mensaje' => 'Usuario registrado correctamente',
             'user' => $user
         ], 201);
     }
@@ -45,13 +46,15 @@ class AuthController extends Controller
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
-                'message' => 'Acceso incorrecto'
+                'acceso' => 'No',
+                'error' => 'Credenciales incorrectas'
             ], 401);
         }
 
         return response()->json([
-            'message' => 'Acceso correcto',
+            'acceso' => 'Ok',
+            'mensaje' => 'Acceso concedido',
             'user' => $user
-        ]);
+        ], 200);
     }
 }

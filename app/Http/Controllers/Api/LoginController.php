@@ -9,27 +9,51 @@ use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-    public function registrar(Request $request)
+    // Registro de usuario
+    public function register(Request $request)
     {
         \Log::info('Datos recibidos:', $request->all());
 
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|unique:usuarios,email',
+            'password' => 'required|min:6',
+        ]);
+
         $usuario = new Usuario();
-        $usuario->nombre = $request->nombre;
-        $usuario->correo = $request->correo;
+        $usuario->name = $request->name;
+        $usuario->email = $request->email;
         $usuario->password = Hash::make($request->password);
         $usuario->save();
 
-        return response()->json(['mensaje' => 'Usuario registrado correctamente'], 201);
+        return response()->json([
+            'acceso' => 'Ok',
+            'mensaje' => 'Usuario registrado correctamente',
+            'usuario' => $usuario
+        ], 201);
     }
 
+    // Inicio de sesión
     public function login(Request $request)
     {
-        $usuario = Usuario::where('correo', $request->correo)->first();
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $usuario = Usuario::where('email', $request->email)->first();
 
         if (!$usuario || !Hash::check($request->password, $usuario->password)) {
-            return response()->json(['mensaje' => 'Credenciales incorrectas'], 401);
+            return response()->json([
+                'acceso' => 'No',
+                'error' => 'Credenciales incorrectas'
+            ], 401);
         }
 
-        return response()->json(['mensaje' => 'Acceso concedido', 'usuario' => $usuario->nombre], 200);
+        return response()->json([
+            'acceso' => 'Ok',
+            'mensaje' => 'Acceso concedido',
+            'usuario' => $usuario
+        ], 200);
     }
 }
