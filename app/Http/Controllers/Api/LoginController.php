@@ -11,6 +11,8 @@ class LoginController extends Controller
 {
     public function registrar(Request $request)
     {
+        \Log::info('Datos recibidos:', $request->all());
+
         $usuario = new Usuario();
         $usuario->nombre = $request->nombre;
         $usuario->correo = $request->correo;

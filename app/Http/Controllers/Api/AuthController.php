@@ -12,6 +12,9 @@ class AuthController extends Controller
     // Registro de usuario
     public function register(Request $request)
     {
+        \Log::info('Datos recibidos:', $request->all());  
+        $request->headers->set('Accept', 'application/json');
+
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
