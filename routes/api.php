@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-
+use App\Http\Controllers\Api\GastoController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -25,3 +25,5 @@ Route::get('/prueba', function () {
 // Rutas del Login y Registro
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+Route::apiResource('gastos', GastoController::class);
